@@ -9,7 +9,7 @@ public class EnemyDetection : MonoBehaviour
 {
     [SerializeField] private float targetingRange = 3;
     [SerializeField] private LayerMask playerMask;
-    RaycastHit[] hit;
+    [SerializeField] private Transform Player;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +21,7 @@ public class EnemyDetection : MonoBehaviour
     {
         FindTarget();
     }
-    private void FindTarget()
+    public void FindTarget()
     {
         RaycastHit[] hits = Physics.SphereCastAll(transform.position, targetingRange, (Vector2)transform.position, 0f, playerMask);
         if (hits.Length > 0 )
