@@ -7,9 +7,9 @@ using System;
 
 public class EnemyDetection : MonoBehaviour
 {
-    [SerializeField] private float targetingRange = 3;
-    [SerializeField] private LayerMask playerMask;
-    [SerializeField] private Transform Player;
+    [SerializeField] public float _targetingRange = 3;
+    [SerializeField] private LayerMask _playerMask;
+    [SerializeField] public Transform _player;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,11 +21,12 @@ public class EnemyDetection : MonoBehaviour
     {
         FindTarget();
     }
-    public void FindTarget()
+    private void FindTarget()
     {
-        RaycastHit[] hits = Physics.SphereCastAll(transform.position, targetingRange, (Vector2)transform.position, 0f, playerMask);
+        RaycastHit[] hits = Physics.SphereCastAll(transform.position, _targetingRange, (Vector2)transform.position, 0f, _playerMask);
         if (hits.Length > 0 )
         {
+            _player = hits[0].transform;    
             Debug.Log("Hit");
         }
     }
