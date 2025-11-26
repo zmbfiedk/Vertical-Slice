@@ -3,8 +3,8 @@ using DG.Tweening;
 
 public class CameraShake : MonoBehaviour
 {
-    [SerializeField] private float shakeDuration = 0.15f;
-    [SerializeField] private float shakeStrength = 0.6f;
+    [SerializeField] private float _shakeDuration = 0.15f;
+    [SerializeField] private float _shakeStrength = 0.6f;
 
     private Vector3 originalLocalPos;
 
@@ -26,19 +26,18 @@ public class CameraShake : MonoBehaviour
 
     private void Shake()
     {
-        transform.DOKill(); // stop old shakes
-        transform.localPosition = originalLocalPos; // reset before shaking
+        transform.DOKill(); 
+        transform.localPosition = originalLocalPos;
 
         transform.DOShakePosition(
-            shakeDuration,
-            shakeStrength,
+            _shakeDuration,
+            _shakeStrength,
             20,
             90,
             false,
             true
         ).OnComplete(() =>
         {
-            // After shaking, snap back to original local position
             transform.localPosition = originalLocalPos;
         });
     }
