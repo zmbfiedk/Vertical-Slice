@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 6583035293146569547}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -121,6 +121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2.5
+  canMove: 1
 --- !u!114 &1107817166054531459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,8 +151,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 10
   hurtboxPrefab: {fileID: 133324799989796835, guid: abe9b52021bd54b40b62c6407fe0268c, type: 3}
-  delayBetweenAttacks: 0.5
+  delayBetweenAttacks: 0.2
   comboCooldown: 1
   attackRange: 0.2
+  forwardPush: 0.2
+  pushSpeed: 1
   isAttacking: 0
   comboResetTimer: 0
