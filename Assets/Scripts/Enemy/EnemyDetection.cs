@@ -7,7 +7,7 @@ using System;
 
 public class EnemyDetection : MonoBehaviour
 {
-    [SerializeField] public float _targetingRange = 3;
+    [SerializeField] public float _targetingRange = 4f;
     [SerializeField] private LayerMask _playerMask;
     [SerializeField] public Transform _player;
     // Start is called before the first frame update
