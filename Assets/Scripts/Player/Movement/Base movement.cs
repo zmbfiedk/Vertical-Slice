@@ -4,8 +4,14 @@ public class Basemovement : MonoBehaviour
 {
     [SerializeField] private float speed = 5f;
 
+    [HideInInspector] public bool canMove = true;
+    // Combat script toggles this
+
     void Update()
     {
+        if (!canMove)
+            return;
+
         float rawX = Input.GetAxisRaw("Horizontal");
         float rawY = Input.GetAxisRaw("Vertical");
 
@@ -13,7 +19,6 @@ public class Basemovement : MonoBehaviour
 
         if (input.sqrMagnitude > 0.1f)
         {
-            // Normalize so diagonal isn't faster
             input.Normalize();
 
             transform.Translate(input * speed * Time.deltaTime, Space.World);
