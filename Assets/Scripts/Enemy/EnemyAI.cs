@@ -8,6 +8,7 @@ using static UnityEngine.GraphicsBuffer;
 public class EnemyAI : MonoBehaviour
 {
     [SerializeField] EnemyDetection _enemyDetection;
+    [SerializeField] AttackPlayer _attackPlayer;
     private float _moveSpeed = 1f;
     public float _attackRange = 1.5f;
     // Start is called before the first frame update
@@ -36,6 +37,7 @@ public class EnemyAI : MonoBehaviour
         else if (dist > _attackRange && dist <= _enemyDetection._targetingRange)
         {
             _moveSpeed = 1f;
-        }   
+        }
+
     }
 }

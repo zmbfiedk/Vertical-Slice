@@ -7,8 +7,9 @@ public class AttackPlayer : MonoBehaviour
 {
     [SerializeField] EnemyDetection _enemyDetection;
     [SerializeField] EnemyAI _enemyAI;
-    private float _attackCooldown = 0f;
+    public float _attackCooldown = 0f;
     private float _dashDistance = 6f;
+    private float _dashSpeed = 4f;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,13 +26,13 @@ public class AttackPlayer : MonoBehaviour
     private void Attack()
     {
         float dist = Vector3.Distance(_enemyDetection._player.position, transform.position);
-        if (_attackCooldown >= 1f && dist <= _enemyAI._attackRange) 
+        if (_attackCooldown >= 1.5f && dist <= _enemyAI._attackRange) 
         {
             Vector3 direction = _enemyDetection._player.position - transform.position;
             Vector3 startPos = transform.position;
             Vector3 targetPos = startPos + direction.normalized * _dashDistance;
             
-            Vector3.MoveTowards(transform.position, targetPos, 10f);
+            transform.position = Vector3.MoveTowards(transform.position, targetPos, _dashSpeed);
             _attackCooldown = 0f;
         }   
     }
