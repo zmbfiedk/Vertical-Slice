@@ -1,40 +1,42 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class BaseCombat : MonoBehaviour
 {
+    public static Action OnHit;
+
     [Header("Combat Settings")]
     [SerializeField] private int damage = 10;
-    [SerializeField] private GameObject hurtboxPrefab; // The hurtbox to spawn
+    [SerializeField] private GameObject hurtboxPrefab;
     [SerializeField] private float delayBetweenAttacks = 0.3f;
     [SerializeField] private float comboCooldown = 1f;
     [SerializeField] private float attackRange = 1f;
+
+    [Header("Attack Movement")]
+    [SerializeField] private float forwardPush = 0.5f;   // how far player moves during attack
+    [SerializeField] private float pushSpeed = 10f;       // how fast he moves that 0.5f
 
     [Header("Read Only")]
     [SerializeField] private bool isAttacking = false;
     [SerializeField] private float comboResetTimer = 0f;
 
-    private int attackIndex = 0; // Tracks which attack in the combo you are on
+    private int attackIndex = 0;
+    private Basemovement move; 
 
-    private void Start()
+    void Start()
     {
-        if (hurtboxPrefab == null)
-        {
-            Debug.LogWarning(" No hurtbox prefab assigned to BaseCombat!");
-        }
+        move = GetComponent<Basemovement>();
     }
 
     void Update()
     {
-        // Reduce cooldown after combo
         if (comboResetTimer > 0)
             comboResetTimer -= Time.deltaTime;
 
-        // Prevent attacking if we are in cooldown
         if (comboResetTimer > 0 || isAttacking)
             return;
 
-        // Attack input (mouse 1)
         if (Input.GetMouseButtonDown(0))
         {
             attackIndex = 1;
@@ -45,15 +47,12 @@ public class BaseCombat : MonoBehaviour
     private IEnumerator Attack1()
     {
         isAttacking = true;
+        move.canMove = false;  // 
 
-        SpawnHurtbox();
-        Debug.Log("Attack 1!!!");
-
+        DoHit();
         yield return new WaitForSeconds(delayBetweenAttacks);
 
-        float timer = delayBetweenAttacks; // Give player a small window to continue the combo
-
-
+        float timer = delayBetweenAttacks;
         while (timer > 0)
         {
             timer -= Time.deltaTime;
@@ -68,19 +67,16 @@ public class BaseCombat : MonoBehaviour
             yield return null;
         }
 
-        EndCombo();  // No follow-up > end combo
-
+        EndCombo();
     }
 
     private IEnumerator Attack2()
     {
-        SpawnHurtbox();
-        Debug.Log("Attack 2!!!");
+        DoHit();
 
         yield return new WaitForSeconds(delayBetweenAttacks);
 
         float timer = delayBetweenAttacks;
-
         while (timer > 0)
         {
             timer -= Time.deltaTime;
@@ -100,21 +96,41 @@ public class BaseCombat : MonoBehaviour
 
     private IEnumerator Attack3()
     {
-        SpawnHurtbox();
-        Debug.Log("Attack 3!!! FINAL HIT");
+        DoHit();
 
         yield return new WaitForSeconds(delayBetweenAttacks);
-
-        comboResetTimer = comboCooldown; // Final attack > give large cooldown
+        comboResetTimer = comboCooldown;
 
         EndCombo();
     }
 
-
     private void EndCombo()
     {
         isAttacking = false;
+        move.canMove = true;   //  Unlock movement again
         attackIndex = 0;
+    }
+
+    private void DoHit()
+    {
+        SpawnHurtbox();
+        StartCoroutine(PushForward());   //  Add attack movement
+        OnHit?.Invoke();
+    }
+
+    private IEnumerator PushForward()
+    {
+        float moved = 0f;
+
+        // Move the player forward smoothly until it reaches forwardPush distance
+        while (moved < forwardPush)
+        {
+            float step = pushSpeed * Time.deltaTime;
+            transform.Translate(Vector3.forward * step);
+
+            moved += step;
+            yield return null;
+        }
     }
 
     private void SpawnHurtbox()
@@ -125,8 +141,6 @@ public class BaseCombat : MonoBehaviour
         Vector3 spawnPos = transform.position + transform.forward * attackRange;
 
         GameObject hb = Instantiate(hurtboxPrefab, spawnPos, transform.rotation, transform);
-
         Destroy(hb, 0.2f);
     }
-
 }
