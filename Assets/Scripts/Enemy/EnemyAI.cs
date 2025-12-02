@@ -32,7 +32,6 @@ public class EnemyAI : MonoBehaviour
         if (dist <= _attackRange)
         {
             _moveSpeed = 0f;    
-            Debug.Log("Within Attack Range");
         }
         else if (dist > _attackRange && dist <= _enemyDetection._targetingRange)
         {

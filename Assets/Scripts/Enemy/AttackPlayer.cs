@@ -7,7 +7,8 @@ public class AttackPlayer : MonoBehaviour
 {
     [SerializeField] EnemyDetection _enemyDetection;
     [SerializeField] EnemyAI _enemyAI;
-    private float time = 0f;
+    private float _attackCooldown = 0f;
+    private float _dashDistance = 6f;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,18 +18,21 @@ public class AttackPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        time += Time.deltaTime;
+        _attackCooldown += Time.deltaTime;
         Attack();
     }
-
+    
     private void Attack()
     {
         float dist = Vector3.Distance(_enemyDetection._player.position, transform.position);
-        if (time >= 1f && dist <= _enemyAI._attackRange) 
+        if (_attackCooldown >= 1f && dist <= _enemyAI._attackRange) 
         {
-            Debug.Log("Attack Player");
-
-            time = 0f;
+            Vector3 direction = _enemyDetection._player.position - transform.position;
+            Vector3 startPos = transform.position;
+            Vector3 targetPos = startPos + direction.normalized * _dashDistance;
+            
+            Vector3.MoveTowards(transform.position, targetPos, 10f);
+            _attackCooldown = 0f;
         }   
     }
 }

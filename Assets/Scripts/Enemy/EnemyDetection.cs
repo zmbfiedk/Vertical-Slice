@@ -27,7 +27,6 @@ public class EnemyDetection : MonoBehaviour
         if (hits.Length > 0 )
         {
             _player = hits[0].transform;    
-            Debug.Log("Hit");
         }
     }
 }
